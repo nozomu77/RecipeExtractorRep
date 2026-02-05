@@ -66,14 +66,14 @@ JSON配列で出力してください。各レシピは以下の構造を持ち�
 
 ```json
 [
-  {
+  {{
     "name": "料理名",
     "description": "料理の説明",
     "cuisine_type": "料理ジャンル",
     "meal_type": "食事タイプ（朝食/昼食/夕食/デザート/軽食など）",
     "dietary_tags": ["該当するタグ"],
     "ingredients": [
-      {"name": "材料名", "amount": "量", "unit": "単位"}
+      {{"name": "材料名", "amount": "量", "unit": "単位"}}
     ],
     "main_ingredients": ["主要食材1", "主要食材2"],
     "servings": "何人分",
@@ -83,9 +83,9 @@ JSON配列で出力してください。各レシピは以下の構造を持ち�
     "difficulty": "難易度（簡単/普通/難しい）",
     "steps": ["手順1", "手順2", "..."],
     "calories": "カロリー",
-    "nutrition_info": {"protein": "...", "fat": "...", "carbs": "..."},
+    "nutrition_info": {{"protein": "...", "fat": "...", "carbs": "..."}},
     "tips": ["コツ1", "コツ2"]
-  }
+  }}
 ]
 ```
 
