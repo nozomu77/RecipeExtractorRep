@@ -43,18 +43,38 @@ def cli(ctx, config):
 @cli.command()
 @click.option("--folder-id", "-f", required=True, help="Google DriveのフォルダID")
 @click.option("--output-dir", "-o", default="./data/pdfs", help="PDF保存先ディレクトリ")
+@click.option("--use-oauth", is_flag=True, help="OAuth認証を使用（ローカル用、ブラウザが開く）")
 @click.pass_context
-def download(ctx, folder_id, output_dir):
-    """Google DriveからPDFをダウンロード"""
+def download(ctx, folder_id, output_dir, use_oauth):
+    """Google DriveからPDFをダウンロード
+
+    認証方法（優先順位）:
+    1. 環境変数 GOOGLE_SERVICE_ACCOUNT_BASE64（Codespaces推奨）
+    2. 環境変数 GOOGLE_SERVICE_ACCOUNT_FILE
+    3. service_account.json ファイル
+    4. --use-oauth オプション（ローカル用）
+    """
     config = ctx.obj["config"]
     drive_config = config.get("google_drive", {})
 
     console.print("[bold blue]Google Driveからダウンロード中...[/]")
 
+    # 認証方法を表示
+    if os.environ.get("GOOGLE_SERVICE_ACCOUNT_BASE64"):
+        console.print("[dim]認証: 環境変数 GOOGLE_SERVICE_ACCOUNT_BASE64[/]")
+    elif os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE"):
+        console.print(f"[dim]認証: 環境変数 GOOGLE_SERVICE_ACCOUNT_FILE[/]")
+    elif os.path.exists("service_account.json"):
+        console.print("[dim]認証: service_account.json[/]")
+    elif use_oauth:
+        console.print("[dim]認証: OAuth（ブラウザ認証）[/]")
+
     try:
         client = DriveClient(
+            service_account_file=drive_config.get("service_account_file"),
             credentials_file=drive_config.get("credentials_file", "credentials.json"),
             token_file=drive_config.get("token_file", "token.json"),
+            use_oauth=use_oauth,
         )
 
         with Progress(

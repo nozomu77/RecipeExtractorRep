@@ -12,6 +12,7 @@ ENV/
 config.json
 credentials.json
 token.json
+service_account.json
 
 # Data files
 data/pdfs/
