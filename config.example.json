@@ -1,0 +1,14 @@
+{
+  "google_drive": {
+    "credentials_file": "credentials.json",
+    "token_file": "token.json",
+    "folder_id": "YOUR_GOOGLE_DRIVE_FOLDER_ID"
+  },
+  "anthropic": {
+    "api_key": "YOUR_ANTHROPIC_API_KEY"
+  },
+  "storage": {
+    "output_dir": "./data",
+    "recipes_file": "recipes.json"
+  }
+}

@@ -1,0 +1,16 @@
+# Google Drive API
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=1.1.0
+
+# PDF Processing
+PyMuPDF>=1.23.0
+pdfplumber>=0.10.0
+
+# LLM (Claude API)
+anthropic>=0.18.0
+
+# CLI & Utilities
+click>=8.1.0
+rich>=13.0.0
+python-dotenv>=1.0.0
