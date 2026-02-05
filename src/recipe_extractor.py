@@ -200,19 +200,32 @@ class RecipeExtractor:
         Returns:
             パースされたJSONデータ（レシピのリスト）
         """
-        # コードブロック内のJSONを探す
-        if "```json" in response:
-            start = response.find("```json") + 7
-            end = response.find("```", start)
-            json_str = response[start:end].strip()
-        elif "```" in response:
-            start = response.find("```") + 3
-            end = response.find("```", start)
-            json_str = response[start:end].strip()
-        else:
-            # そのままJSONとして解析を試みる
+        import re
+
+        json_str = None
+
+        # 方法1: ```json ... ``` ブロックを探す
+        json_block_match = re.search(r'```json\s*([\s\S]*?)\s*```', response)
+        if json_block_match:
+            json_str = json_block_match.group(1).strip()
+
+        # 方法2: ``` ... ``` ブロックを探す
+        if not json_str:
+            code_block_match = re.search(r'```\s*([\s\S]*?)\s*```', response)
+            if code_block_match:
+                json_str = code_block_match.group(1).strip()
+
+        # 方法3: [ ... ] 配列を直接探す
+        if not json_str:
+            array_match = re.search(r'(\[[\s\S]*\])', response)
+            if array_match:
+                json_str = array_match.group(1).strip()
+
+        # 方法4: そのまま試す
+        if not json_str:
             json_str = response.strip()
 
+        # パース試行
         try:
             data = json.loads(json_str)
             if isinstance(data, list):
@@ -220,6 +233,8 @@ class RecipeExtractor:
             elif isinstance(data, dict):
                 return [data]
             return []
-        except json.JSONDecodeError:
-            print(f"[警告] JSON解析に失敗しました")
+        except json.JSONDecodeError as e:
+            print(f"[警告] JSON解析に失敗しました: {e}")
+            # デバッグ用: 最初の200文字を表示
+            print(f"[デバッグ] レスポンス先頭: {response[:200]}...")
             return []
