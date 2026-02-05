@@ -157,7 +157,9 @@ def extract(ctx, input_dir, file):
                     console.print(f"  [yellow]- 新規レシピなし（重複）[/]")
 
             except Exception as e:
-                console.print(f"  [red]✗ エラー: {e}[/]")
+                import traceback
+                console.print(f"  [red]✗ エラー: {type(e).__name__}: {e}[/]")
+                console.print(f"  [dim]{traceback.format_exc()}[/]")
 
             progress.remove_task(task)
 
